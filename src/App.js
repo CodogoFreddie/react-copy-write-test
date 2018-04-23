@@ -2,6 +2,12 @@ import React, { Fragment, Component } from "react";
 
 import { Provider, Consumer, getTodoById } from "./store";
 
+const Author = ({ id }) => (
+  <Consumer selector={({ users }) => users[id]}>
+    {author => <div>Author: {author.loading ? "loading..." : author.name}</div>}
+  </Consumer>
+);
+
 const Todo = ({ id }) => (
   <Consumer selector={({ todos }) => todos[id]}>
     {(todo, mutate) => (
@@ -32,6 +38,7 @@ const Todo = ({ id }) => (
               }
               value={todo.text}
             />
+            {todo.authorId && <Author id={todo.authorId} />}
           </Fragment>
         )}
       </div>

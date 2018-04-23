@@ -1,7 +1,8 @@
 import createState from "react-copy-write";
 
 const { Provider, Consumer, createMutator } = createState({
-  todos: {}
+  todos: {},
+  users: {}
 });
 
 export { Provider, Consumer };
@@ -18,6 +19,28 @@ const getTodoData = id => {
   });
 };
 
+const getUserData = id => {
+  fetch(`https://www.example.com/get-user/${id}`);
+
+  return new Promise(done => {
+    setTimeout(done, 500 + Math.random() * 1000, {
+      name: id === "aaa" ? "Freddie" : "Marcelo"
+    });
+  });
+};
+
+export const getUserById = id => {
+  const mutator = createMutator((state, user) => {
+    state.users[id] = user;
+  });
+
+  mutator({
+    loading: true
+  });
+
+  getUserData(id).then(mutator);
+};
+
 export const getTodoById = id => {
   const mutator = createMutator((state, todo) => {
     state.todos[id] = todo;
@@ -27,5 +50,10 @@ export const getTodoById = id => {
     loading: true
   });
 
-  getTodoData(id).then(mutator);
+  getTodoData(id)
+    .then(todo => {
+      getUserById(todo.authorId);
+      return todo;
+    })
+    .then(mutator);
 };
