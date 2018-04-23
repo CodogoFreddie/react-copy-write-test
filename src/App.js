@@ -2,16 +2,6 @@ import React, { Fragment, Component } from "react";
 
 import { Provider, Consumer, getTodoById } from "./store";
 
-const toggleDone = mutate => () =>
-  mutate(todo => {
-    todo.done = !todo.done;
-  });
-
-const setText = mutate => e =>
-  mutate(todo => {
-    todo.text = e.target.value;
-  });
-
 const Todo = ({ id }) => (
   <Consumer selector={({ todos }) => todos[id]}>
     {(todo, mutate) => (
@@ -61,7 +51,25 @@ class App extends Component {
       <Provider>
         <div style={{ backgroundColor: "red", padding: "1em" }}>
           <Consumer selector={({ todos }) => todos}>
-            {todos => Object.keys(todos).map(id => <Todo key={id} id={id} />)}
+            {(todos, mutate) => (
+              <Fragment>
+                <div>
+                  {Object.keys(todos).map(id => <Todo key={id} id={id} />)}
+                </div>
+                <div
+                  onClick={() =>
+                    mutate(draft => {
+                      Object.keys(draft.todos).forEach(id => {
+                        draft.todos[id].done = true;
+                      });
+                    })
+                  }
+                  style={{ backgroundColor: "green" }}
+                >
+                  ALL DONE
+                </div>
+              </Fragment>
+            )}
           </Consumer>
         </div>
       </Provider>

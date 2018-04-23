@@ -2,6 +2,9 @@
   "name": "react-copy-write-test",
   "version": "0.1.0",
   "private": true,
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "dependencies": {
     "eslint": "^4.19.1",
     "prettier": "^1.12.1",
